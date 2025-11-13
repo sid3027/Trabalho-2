@@ -1,57 +1,51 @@
 import { ContaCorrente } from "./contacorrente.js";
 
-class ContaCorrente extends Conta {
-    #limite;
+export class ContaCorrente extends Conta{
+    #tarifa;
+    #limiteCredito;
+    #juros;
+    #saldoDevedor;
 
-    constructor(agencia, numero, titular, limite = 500) {
-        super(agencia, numero, titular);
-        this.#limite = limite;
+    constructor(id, titular, saldo, tarifa, limiteCredito, juros, saldoDevedor){
+        super(id, titular, saldo);
+        this.#tarifa = tarifa;
+        this.#limiteCredito = limiteCredito;
+        this.#juros = juros;
+        this.#saldoDevedor = 0;
     }
 
-    get limite() {
-        return this.#limite;
+    get tarifa(){
+        return this.#tarifa;
     }
 
-    sacar(valor) {
-        if (valor > 0 && valor <= this.saldo + this.#limite) {
-            this._alterarSaldo(-valor);
+    get limiteCredito(){
+        return this.#limiteCredito;
+    }
+
+    get juros(){
+        return this.#juros;
+    }
+
+    get saldoDevedor(){
+        return this.#saldoDevedor;
+    }
+
+    sacar(valor){
+        if(valor <= (super.saldo + this.#limiteCredito - this.#saldoDevedor)){
+            if(!super.sacar(valor)){
+                valor -= super.saldo;
+                super.sacar(super.saldo);
+                this.#saldoDevedor += valor;
+            }
             return true;
         }
-        return false;
+        return false; 
     }
-    viraMes() {
-        const tarifaMensal = 20;
-        this.sacar(tarifaMensal);
-    }
-    toString() {
-        return (
-            "=== Conta Corrente ===\n" +
-            super.toString() +
-            `\nLimite: R$ ${this.#limite.toFixed(2)}`
-        );
+
+    depositar(valor){
+        if(this.#saldoDevedor > 0){
+            valor -= this.#saldoDevedor;
+            valor += saldo;
+        }
     }
 }
-
-import { Pessoa } from "./Pessoa.js";
-// Teste das classes ContaCorrente e Pessoa : sujestao de uso 
-const cliente1 = new Pessoa("Bruno", "11122233344");
-const cliente2 = new Pessoa("Ana", "55544433322");
-
-const conta1 = new ContaCorrente("0001", "1234-5", cliente1, 1000);
-const conta2 = new ContaCorrente("0001", "5432-1", cliente2, 500);
-
-conta1.depositar(800);
-conta2.depositar(300);
-conta1.sacar(200);
-conta2.transferir(100, conta1);
-
-
-console.log(conta1.toString());
-console.log("---------------------");
-console.log(conta2.toString());
-console.log("\n--- Após virar o mês ---");
-conta1.viraMes();
-conta2.viraMes();
-console.log(conta1.toString());
-console.log("---------------------");
-console.log(conta2.toString());

@@ -1,41 +1,40 @@
-import { Pessoa } from "./Pessoa.js";
-export class Pessoa {      
+export class Pessoa {
     #nome;
     #cpf;
-    #dataNascimento;
-
-    constructor(nome, cpf, dataNascimento) {
-        this.#nome = nome.toUpperCase();
+    #dtNascimento;
+    constructor (nome, cpf, dtNasc) {
+        this.#nome = nome;
         this.#cpf = cpf;
-        this.#dataNascimento = dataNascimento || "2000/01/01";
+        this.#dtNascimento = dtNasc;
     }
+    /*... as implementações dos métodos get e set seguem
+    os códigos mostrados anteriormente para a classe Cliente
+    */
 
-    get nome() {
+    get nome(){
         return this.#nome;
     }
-
-    set nome(novoNome) {
-        if (novoNome) {
-            this.#nome = novoNome.toUpperCase();
+    set nome(nome){
+        if (nome.length != 0){
+            this.#nome = nome;
         }
     }
 
-    get cpf() {
+    get cpf(){
         return this.#cpf;
     }
 
-    get dataNascimento() {
-        return this.#dataNascimento;
+    get dtNascimento(){
+        return this.#dtNascimento;
     }
 
-    set dataNascimento(novaData) {
-        if (novaData && novaData.length === 10) {
-            this.#dataNascimento = novaData;
-        }
+    set dtNascimento(dtNascimento){
+        this.#dtNascimento = dtNascimento;
     }
 
     toString() {
-        return `Nome: ${this.#nome}\nCPF: ${this.#cpf}\nData de Nascimento: ${this.#dataNascimento}`;
-    }
-} 
-
+        return ("\nNome: " + this.#nome +
+        "\nCPF: " + this.#cpf +
+        "\nNascimento: " + this.#dtNascimento);
+    } 
+}
