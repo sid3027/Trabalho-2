@@ -1,14 +1,11 @@
-// Classe Cliente
-// Representa o titular de uma conta no banco.
+export class Conta {
 
-export class Cliente {
-
-  // Atributos privados 
+  
   #nome;
   #cpf;
   #dataNascimento;
 
-  // Construtor: usado para criar um novo cliente
+  
   constructor(nome, cpf, dataNascimento) {
     this.#nome = nome.toUpperCase(); 
     this.#cpf = cpf;
@@ -56,3 +53,4 @@ export class Cliente {
            "\nData de Nascimento: " + this.#dataNascimento;
   }
 }
+
