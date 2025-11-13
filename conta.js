@@ -1,6 +1,7 @@
+import { Conta } from "./conta.js";
+
 export class Conta {
 
-  
   #nome;
   #cpf;
   #dataNascimento;

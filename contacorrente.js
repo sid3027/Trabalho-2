@@ -1,3 +1,5 @@
+import { ContaCorrente } from "./contacorrente.js";
+
 class ContaCorrente extends Conta {
     #limite;
 

@@ -1,3 +1,5 @@
+import { Poupança } from "./Poupança.js";
+
 export class Poupança extends Conta {
     #aniversario;   
     constructor(agencia, numero, titular, aniversario) {

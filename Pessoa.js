@@ -1,3 +1,4 @@
+import { Pessoa } from "./Pessoa.js";
 export class Pessoa {      
     #nome;
     #cpf;
