@@ -1,57 +1,74 @@
-import { Conta } from "./conta.js";
+import { Cliente } from "./Cliente";
+import { Conta } from "./Conta";
+
 
 export class Conta {
+    static #qtdContas = 0;
+    #id;
+    #saldo;
+    #titular;
 
-  #nome;
-  #cpf;
-  #dataNascimento;
-
-  
-  constructor(nome, cpf, dataNascimento) {
-    this.#nome = nome.toUpperCase(); 
-    this.#cpf = cpf;
-
-    
-    if (dataNascimento != undefined && dataNascimento != "") {
-      this.#dataNascimento = dataNascimento;
-    } else {
-      this.#dataNascimento = "2000/01/01";
+    constructor(cliente, saldo = 0.0) {
+        this.#titular = cliente;
+        this.#saldo = saldo < 0.0 ? 0.0 : saldo;
+        Conta.#qtdContas++;
+        this.#id = "" + new Date().getFullYear();
+        + Conta.#qtdContas;
     }
-  }
 
-  
-  get nome() {
-    return this.#nome;
-  }
-
-  
-  set nome(novoNome) {
-    if (novoNome != "") {
-      this.#nome = novoNome.toUpperCase();
+    static get qtContas() {
+        return Conta.#qtdContas;
     }
-  }
 
-  
-  get cpf() {
-    return this.#cpf;
-  }
-
-  
-  get dataNascimento() {
-    return this.#dataNascimento;
-  }
-
-  set dataNascimento(novaData) {
-    if (novaData != "" && novaData.length == 10) {
-      this.#dataNascimento = novaData;
+    get id() {
+        return this.#id;
     }
-  }
 
-  // Mostra as informações do cliente em formato de texto
-  toString() {
-    return "Nome: " + this.#nome +
-           "\nCPF: " + this.#cpf +
-           "\nData de Nascimento: " + this.#dataNascimento;
-  }
-}
+    get titular() {
+        return this.#titular;
+    }
 
+    set titular(cliente) {
+        if (cliente != undefined && cliente instanceof Cliente) {
+            this.#titular = cliente;
+            return cliente;
+        }
+        return null;
+    }
+
+    get saldo() {
+        return this.#saldo;
+    }
+
+    sacar(valor) {
+        if (valor <= this.#saldo) {
+            this.#saldo -= valor;
+            return true;
+        }
+        return false;
+    }
+
+    depositar(valor) {
+        if (valor > 0.00) {
+            this.#saldo += valor;
+            return true;
+        }
+        return false;
+    }
+
+    transferir(valor, contaDestino) {
+        if (contaDestino instanceof Conta && this.sacar(valor)) {
+            contaDestino.depositar(valor);
+            return true;
+        }
+        return false;
+    }
+
+    toString() {
+        return ("Nº Conta = " + this.#id +
+            "\Titular = " + this.#titular.toString() +
+            "\Saldo = R$ " + this.#saldo.toFixed(2)
+        );
+    }
+
+} 

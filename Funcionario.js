@@ -1,31 +1,43 @@
-import { Pessoa } from "./Pessoa.js";
-
-export class Funcionario extends Pessoa {
-    #matricula;
+export class Funcionario {
+    #nome;
+    #cpf;
     #salario;
-    constructor(matricula, nome, cpf, dtNasc, salario = 0.0) {
-        super(nome, cpf, dtNasc);
-        this.#matricula = matricula;
+    #dtAdmissao;
+
+    constructor(nome, cpf, salario = 0.0, dtAdmissao = "2000/01/01") {
+        this.#nome = nome ? nome.toString().toUpperCase() : "NOME NÃO INFORMADO";
+        this.#cpf = cpf ? cpf.toString() : "CPF NÃO INFORMADO";
         this.#salario = salario;
+        this.#dtAdmissao = dtAdmissao;
     }
-
-    get matricula(){
-        return this.#matricula;
+    get nome() {
+        return this.#nome;
     }
-
-    get salario(){
+    get cpf() {
+        return this.#cpf;
+    }
+    get salario() {
         return this.#salario;
     }
-    set salario(salario){
-        if(salario > 0.0){
-            this.#salario = salario;
-        }
+    get dtAdmissao() {
+        return this.#dtAdmissao;
     }
-
+    set nome(novoNome) {
+        if (!novoNome || novoNome.toString().trim() === "") return null;
+        this.#nome = novoNome.toString().toUpperCase();
+        return this.#nome;
+    }
+    set salario(novoSalario) {
+        if (isNaN(novoSalario) || novoSalario < 0) return null;
+        this.#salario = novoSalario;
+        return this.#salario;
+    }
+    set dtAdmissao(novaData) {
+        if (!novaData || novaData.toString().length !== 10) return null;
+        this.#dtAdmissao = novaData;
+        return this.#dtAdmissao;
+    }
     toString() {
-        return ("\nMatricula: " + this.#matricula +
-            super.toString()+
-            "\nSalário: " + this.#salario.toFixed(2));
+        return `Nome: ${this.#nome}\nCPF: ${this.#cpf}\nSalário: R$ ${this.#salario.toFixed(2)}\nData de Admissão: ${this.#dtAdmissao}`;
     }
 }
-

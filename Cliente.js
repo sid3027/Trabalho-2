@@ -1,56 +1,41 @@
-import { Pessoa } from "./Pessoa.js";
+import { Cliente } from "./Cliente";
 
-export class Cliente extends Pessoa {
-    #pontucaoFidelidade;
-    #limiteCredito;
-    #categoria; //COMUM, VIP, PCD
+export class Cliente  {
+  #nome;
+  #cpf;
+  #dtNascimento;
 
-    constructor(nome, cpf, dtNasc, pontuacaoFidelidade = 0, limiteCredito = 100.0, categoria = "COMUM") {
-        super(nome, cpf, dtNasc);
-        this.pontucaoFidelidade = pontuacaoFidelidade;
-        this.limiteCredito = limiteCredito;
-        this.categoria = categoria.toUpperCase();
-    }
+  constructor(nome, cpf, dtNascimento = "2000/01/01") {
+    this.#nome = nome ? nome.toString().toUpperCase() : "NOME NÃO INFORMADO";
+    this.#cpf = cpf ? cpf.toString() : "CPF NÃO INFORMADO";
+    this.#dtNascimento = dtNascimento;
+  }
 
-    get pontucaoFidelidade() {
-        return this.#pontucaoFidelidade;
-    }
-    set pontucaoFidelidade(novaPontuacao) {
-        if (novaPontuacao >= 0) {
-            this.#pontucaoFidelidade = novaPontuacao;
-        } else if (this.#pontucaoFidelidade == undefined) {
-            this.#pontucaoFidelidade = 0;
-        }
-    }
+  get nome() {
+    return this.#nome;
+  }
 
-    get limiteCredito() {
-        return this.#limiteCredito;
-    }
+  get cpf() {
+    return this.#cpf;
+  }
 
-    set limiteCredito(novoLimite) {
-        if (novoLimite >= 0.0) {
-            this.#limiteCredito = novoLimite;
-        } else if (this.#limiteCredito == undefined) {
-            this.#limiteCredito = 100.0;
-        }
-    }
+  get dtNascimento() {
+    return this.#dtNascimento;
+  }
 
-    get categoria() {
-        return this.#categoria;
-    }
+  set nome(novoNome) {
+    if (!novoNome || novoNome.toString().trim() === "") return null;
+    this.#nome = novoNome.toString().toUpperCase();
+    return this.#nome;
+  }
 
-    set categoria(novaCategoria) {
-        if (novaCategoria == "COMUM" || novaCategoria == "VIP" || novaCategoria == "PCD") {
-            this.#categoria = novaCategoria;
-        } else if (this.#categoria == undefined) {
-            this.#categoria = "COMUM";
-        }
-    }
+  set dtNascimento(novaData) {
+    if (!novaData || novaData.toString().length !== 10) return null;
+    this.#dtNascimento = novaData;
+    return this.#dtNascimento;
+  }
 
-    toString() {
-        return (super.toString() +
-            "\nPontuação Fidelidade: " + this.#pontucaoFidelidade +
-            "\nLimite de Crédito: " + this.#limiteCredito.toFixed(2) +
-            "\nCategoria: " + this.#categoria);
-    }
+  toString() {
+    return `Nome: ${this.#nome}\nCPF: ${this.#cpf}\nNascimento: ${this.#dtNascimento}`;
+  }
 }
