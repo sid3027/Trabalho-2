@@ -28,7 +28,7 @@ export class Cliente extends Pessoa {
     }
 
     set limiteCredito(novoLimite) {
-        if (novoLimite >= 0.0) {
+        if (novoLimite >= 0.0 && novoLimite <= 100.0) {
             this.#limiteCredito = novoLimite;
         } else if (this.#limiteCredito == undefined) {
             this.#limiteCredito = 100.0;
