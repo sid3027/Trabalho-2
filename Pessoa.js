@@ -1,40 +1,28 @@
 export class Pessoa {
-    #nome;
-    #cpf;
-    #dtNascimento;
-    constructor (nome, cpf, dtNasc) {
-        this.#nome = nome;
-        this.#cpf = cpf;
-        this.#dtNascimento = dtNasc;
-    }
-    /*... as implementações dos métodos get e set seguem
-    os códigos mostrados anteriormente para a classe Cliente
-    */
+  _nome;
+  _cpf;
 
-    get nome(){
-        return this.#nome;
-    }
-    set nome(nome){
-        if (nome.length != 0){
-            this.#nome = nome;
-        }
-    }
+  constructor(nome, cpf) {
+    this._nome = nome ? nome.toString().toUpperCase() : "NOME NÃO INFORMADO";
+    this._cpf = cpf ? cpf.toString() : "CPF NÃO INFORMADO";
+  }
 
-    get cpf(){
-        return this.#cpf;
-    }
+  get nome() { return this._nome; }
+  get cpf() { return this._cpf; }
 
-    get dtNascimento(){
-        return this.#dtNascimento;
-    }
+  set nome(novoNome) {
+    if (!novoNome || novoNome.toString().trim() === "") return null;
+    this._nome = novoNome.toString().toUpperCase();
+    return this._nome;
+  }
 
-    set dtNascimento(dtNascimento){
-        this.#dtNascimento = dtNascimento;
-    }
+  set cpf(novoCpf) {
+    if (!novoCpf || novoCpf.toString().trim() === "") return null;
+    this._cpf = novoCpf.toString();
+    return this._cpf;
+  }
 
-    toString() {
-        return ("\nNome: " + this.#nome +
-        "\nCPF: " + this.#cpf +
-        "\nNascimento: " + this.#dtNascimento);
-    } 
+  toString() {
+    return `Nome: ${this._nome}\nCPF: ${this._cpf}`;
+  }
 }

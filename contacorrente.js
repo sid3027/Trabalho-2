@@ -1,51 +1,48 @@
-import { ContaCorrente } from "./contacorrente.js";
+import { Conta } from "./conta.js";
 
-export class ContaCorrente extends Conta{
-    #tarifa;
-    #limiteCredito;
-    #juros;
-    #saldoDevedor;
+export class ContaCorrente extends Conta {
+  static qtdContasCorrente = 0;
+  _limite = 0.0;
+  _viradaMes = 0;
 
-    constructor(id, titular, saldo, tarifa, limiteCredito, juros, saldoDevedor){
-        super(id, titular, saldo);
-        this.#tarifa = tarifa;
-        this.#limiteCredito = limiteCredito;
-        this.#juros = juros;
-        this.#saldoDevedor = 0;
+  constructor(titular, saldo = 0.0, limite = 0.0) {
+    super(titular, saldo);
+    this._limite = limite < 0 ? 0.0 : limite;
+    ContaCorrente.qtdContasCorrente++;
+  }
+
+  static get qtContasCorrente() { return ContaCorrente.qtdContasCorrente; }
+  get limite() { return this._limite; }
+  set limite(novoLimite) {
+    if (novoLimite >= 0) {
+      this._limite = novoLimite;
+      return this._limite;
     }
+    return null;
+  }
 
-    get tarifa(){
-        return this.#tarifa;
+  sacar(valor) {
+    if (valor <= 0) return false;
+    if (valor <= this._saldo + this._limite) {
+      this._saldo -= valor;
+      return true;
     }
+    return false;
+  }
 
-    get limiteCredito(){
-        return this.#limiteCredito;
+  viraMes() {
+    const taxaJuros = 0.10; // 10% sobre dívida
+    if (this._saldo < 0) {
+      this._saldo -= Math.abs(this._saldo) * taxaJuros;
     }
+    this._viradaMes++;
+  }
 
-    get juros(){
-        return this.#juros;
-    }
-
-    get saldoDevedor(){
-        return this.#saldoDevedor;
-    }
-
-    sacar(valor){
-        if(valor <= (super.saldo + this.#limiteCredito - this.#saldoDevedor)){
-            if(!super.sacar(valor)){
-                valor -= super.saldo;
-                super.sacar(super.saldo);
-                this.#saldoDevedor += valor;
-            }
-            return true;
-        }
-        return false; 
-    }
-
-    depositar(valor){
-        if(this.#saldoDevedor > 0){
-            valor -= this.#saldoDevedor;
-            valor += saldo;
-        }
-    }
+  toString() {
+    let info = `${super.toString()}\nLimite: R$ ${this._limite.toFixed(2)}`;
+    if (this._saldo < 0) info += `\nAtenção: Conta com saldo negativo!`;
+    else if (this._saldo === 0) info += `\nSaldo zerado.`;
+    else info += `\nConta com saldo positivo.`;
+    return info;
+  }
 }

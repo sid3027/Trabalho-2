@@ -1,57 +1,60 @@
-import { Conta } from "./conta.js";
-
 export class Conta {
+  static qtdContas = 0;
 
-  #nome;
-  #cpf;
-  #dataNascimento;
+  _id;
+  _saldo = 0.0;
+  _titular;
 
-  
-  constructor(nome, cpf, dataNascimento) {
-    this.#nome = nome.toUpperCase(); 
-    this.#cpf = cpf;
+  constructor(titular, saldo = 0.0) {
+    this._titular = titular;
+    this._saldo = saldo < 0 ? 0.0 : saldo;
+    Conta.qtdContas++;
+    this._id = `${new Date().getFullYear()}${Conta.qtdContas}`;
+  }
 
-    
-    if (dataNascimento != undefined && dataNascimento != "") {
-      this.#dataNascimento = dataNascimento;
-    } else {
-      this.#dataNascimento = "2000/01/01";
+  static get qtContas() { return Conta.qtdContas; }
+
+  get id() { return this._id; }
+  get titular() { return this._titular; }
+  set titular(cliente) {
+    if (cliente !== undefined) {
+      this._titular = cliente;
+      return cliente;
     }
+    return null;
   }
 
-  
-  get nome() {
-    return this.#nome;
-  }
+  get saldo() { return this._saldo; }
 
-  
-  set nome(novoNome) {
-    if (novoNome != "") {
-      this.#nome = novoNome.toUpperCase();
+  sacar(valor) {
+    if (valor > 0 && valor <= this._saldo) {
+      this._saldo -= valor;
+      return true;
     }
+    return false;
   }
 
-  
-  get cpf() {
-    return this.#cpf;
-  }
-
-  
-  get dataNascimento() {
-    return this.#dataNascimento;
-  }
-
-  set dataNascimento(novaData) {
-    if (novaData != "" && novaData.length == 10) {
-      this.#dataNascimento = novaData;
+  depositar(valor) {
+    if (valor > 0) {
+      this._saldo += valor;
+      return true;
     }
+    return false;
   }
 
-  // Mostra as informações do cliente em formato de texto
+  transferir(valor, contaDestino) {
+    if (contaDestino instanceof Conta && this.sacar(valor)) {
+      contaDestino.depositar(valor);
+      return true;
+    }
+    return false;
+  }
+
+  viraMes() {
+    // base: nada por padrão
+  }
+
   toString() {
-    return "Nome: " + this.#nome +
-           "\nCPF: " + this.#cpf +
-           "\nData de Nascimento: " + this.#dataNascimento;
+    return `ID: ${this._id}\nTitular: ${this._titular?.nome ?? "SEM TITULAR"}\nSaldo: R$ ${this._saldo.toFixed(2)}`;
   }
 }
-
