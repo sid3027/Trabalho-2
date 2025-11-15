@@ -1,20 +1,19 @@
-import { Cliente } from "./Cliente";
+import { Cliente } from "./Cliente.js";
 
 export class Conta{
     static #qtdContas = 0;
     #id;
-    #saldo;
     #titular;
+    #saldo;
 
-    constructor(cliente, saldo = 0.0) {
+    constructor(id, cliente, saldo = 0.0) {
+        this.#id = id;
         this.#titular = cliente;
         this.#saldo = saldo < 0.0 ? 0.0: saldo;
         Conta.#qtdContas++;
-        this.#id = "" + new Date().getFullYear();
-                      + Conta.#qtdContas;
     }
 
-    static get qtContas() {
+    static get qtdContas() {
         return Conta.#qtdContas;
     }
 
@@ -64,9 +63,8 @@ export class Conta{
 
     toString(){
         return ("Nº Conta = " + this.#id +
-                "\Titular = " + this.#titular.toString() +
-                "\Saldo = R$ " + this.#saldo.toFixed(2)
-        );
+                "\nTitular = " + this.#titular.toString() +
+                "\nSaldo = R$ " + this.#saldo.toFixed(2));
     }
 
 } 

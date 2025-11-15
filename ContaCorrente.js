@@ -1,51 +1,76 @@
-import { Conta } from "./Conta";
+import { Conta } from "./Conta.js";
 
-export class ContaCorrente extends Conta{
-    #tarifa;
-    #limiteCredito;
-    #juros;
-    #saldoDevedor;
+export class ContaCorrente extends Conta {
+  #tarifa;
+  #limiteCredito;
+  #juros;
+  #saldoDevedor;
 
-    constructor(id, titular, saldo, tarifa, limiteCredito, juros, saldoDevedor){
-        super(id, titular, saldo);
-        this.#tarifa = tarifa;
-        this.#limiteCredito = limiteCredito;
-        this.#juros = juros;
+  constructor(id, titular, saldo, tarifa, limiteCredito, juros){
+    super(id, titular, saldo);
+    this.#tarifa = tarifa;
+    this.#limiteCredito = limiteCredito;
+    this.#juros = juros;
+    this.#saldoDevedor = 0;
+  }
+
+  get tarifa(){ 
+    return this.#tarifa; 
+  }
+
+  get limiteCredito(){
+    return this.#limiteCredito; 
+  }
+
+  get juros(){ 
+    return this.#juros; 
+  }
+
+  get saldoDevedor(){ 
+    return this.#saldoDevedor; 
+  }
+
+  sacar(valor) {
+    const saldoAtual = this.saldo;
+
+    if (valor <= (saldoAtual + this.#limiteCredito - this.#saldoDevedor)){
+      if (valor <= saldoAtual) {
+        return super.sacar(valor);
+      }
+      const diferenca = valor - saldoAtual;
+      super.sacar(saldoAtual);
+      this.#saldoDevedor += diferenca;
+
+      return true;
+    }
+    return false;
+  }
+
+  depositar(valor) {
+    if (this.#saldoDevedor > 0) {
+      if (valor >= this.#saldoDevedor) {
+        valor -= this.#saldoDevedor;
         this.#saldoDevedor = 0;
+      } else {
+        this.#saldoDevedor -= valor;
+        return;
+      }
     }
 
-    get tarifa(){
-        return this.#tarifa;
+    super.depositar(valor);
+  }
+
+  limiteDisponivel() {
+    return this.#limiteCredito - this.#saldoDevedor;
+  }
+
+  viraMes() {
+    if (!this.sacar(this.#tarifa)) {
+        this.#saldoDevedor += this.#tarifa;
     }
 
-    get limiteCredito(){
-        return this.#limiteCredito;
+    if (this.#saldoDevedor > 0) {
+      this.#saldoDevedor *= (1 + this.#juros);
     }
-
-    get juros(){
-        return this.#juros;
-    }
-
-    get saldoDevedor(){
-        return this.#saldoDevedor;
-    }
-
-    sacar(valor){
-        if(valor <= (super.saldo + this.#limiteCredito - this.#saldoDevedor)){
-            if(!super.sacar(valor)){
-                valor -= super.saldo;
-                super.sacar(super.saldo);
-                this.#saldoDevedor += valor;
-            }
-            return true;
-        }
-        return false; 
-    }
-
-    depositar(valor){
-        if(this.#saldoDevedor > 0){
-            valor -= this.#saldoDevedor;
-            valor += saldo;
-        }
-    }
+  }
 }

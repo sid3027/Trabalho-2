@@ -1,5 +1,7 @@
 import {Funcionario} from "./Funcionario.js";
 import {Cliente} from "./Cliente.js";
+import { ContaCorrente } from "./ContaCorrente.js";
+import { Poupanca } from "./Poupanca.js";
 
 let func = new Funcionario("12345", "Rivaldo", "123.456.789-12", "01/01/2001", 1200.00);
 //Executando no debug, observe como funciona o método constructor da classe Funcionario
@@ -45,5 +47,59 @@ let c9 = new Cliente("Hodor", "999.000.111-22", "17/06/1988", 12, 90.0, "PCD");
 let c10 = new Cliente("Jorah", "000.111.222-33", "26/09/1977", 70, 99.3, "VIP");
 
 let vetClientes = [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10];
-
 console.log(vetClientes);
+
+let cc1 = new ContaCorrente(101, c1, 500, 10, c1.limiteCredito, 0.02);
+let cc2 = new ContaCorrente(102, c1, 1500, 10, c1.limiteCredito, 0.02);
+let cc3 = new ContaCorrente(103, c2, 800, 10, c2.limiteCredito, 0.02);
+let cc4 = new ContaCorrente(104, c4, 2000, 10, c4.limiteCredito, 0.02);
+let cc5 = new ContaCorrente(105, c5, 1000, 10, c5.limiteCredito, 0.02);
+let cc6 = new ContaCorrente(106, c10, 2500, 10, c10.limiteCredito, 0.02);
+let pp1 = new Poupanca(201, c7, 1200, 0.005);
+let pp2 = new Poupanca(202, c8, 300, 0.005);
+let pp3 = new Poupanca(203, c9, 2000, 0.005);
+let pp4 = new Poupanca(204, c2, 150, 0.005);
+
+let vetContas = [cc1, cc2, cc3, cc4, cc5, cc6,pp1, pp2, pp3, pp4];
+console.log(vetContas);
+
+for(let Conta of vetContas){
+    console.log(Conta.toString());
+}
+
+for (let Conta of vetContas) {
+    Conta.viraMes();
+}
+
+console.log("\n=== SALDOS APÓS VIRADA DO MÊS ===");
+
+for (let Conta of vetContas) {
+    console.log(Conta.toString());
+}
+
+function pesquisarContas(vetor, termo) {
+    if (!termo) return [];
+    termo = termo.toLowerCase();
+
+    return vetor.filter(Conta => {
+        const titular = Conta.titular;
+        if (!titular) return false;
+
+        const nome = (titular.nome || "").toLowerCase();
+        const cpf = (titular.cpf || "").toLowerCase();
+
+        return nome.includes(termo) || cpf.includes(termo);
+    });
+}
+
+let achadas = pesquisarContas(vetContas, "JON");    
+
+if (achadas.length == 0) {
+    console.log("Este cliente não possui conta!");
+} else {
+    achadas.forEach(Conta => {
+        console.log("=== CONTA DO CLIENTE ===")
+        console.log(Conta.toString());
+    });
+}
+
